@@ -1,6 +1,6 @@
 ﻿/***************************************************************************
                         QT PHG
-            用于方便控制电脑以及工作相关的各类事务.
+            用于方便控制电脑以及工作相关的各类事务
 /**************************************************************************/
 #pragma once
 #include <vector>
@@ -69,7 +69,10 @@ namespace phg
             return atof(buff);
         }
 
-        // table
+        /* table sample
+           ["abc"]
+           ["def"]
+        */
         static void _table(code& cd)
         {
             PRINT("TABLE:");
@@ -102,7 +105,7 @@ namespace phg
                 }
             }
         }
-        /* tree
+        /* tree sample
             {
                 a: 1;
                 b: 2;
