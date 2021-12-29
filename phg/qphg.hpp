@@ -220,105 +220,7 @@ namespace phg
         QMessageBox::information(NULL, "", "OK!");
         return 0;
     }
-   PHGAPI(vs)
-    {
-        QString curpath = QDir::currentPath();
-        QDir::setCurrent("C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise\\Common7\\IDE\\");
-        system("devenv.exe");
-        QDir::setCurrent(curpath);
-        return 0;
-    }
-   PHGAPI(password)
-    {
-        QString curpath = QDir::currentPath();
-        QDir::setCurrent("C:\\Users\\18858\\Desktop\\qediter\\template");
-        system("password.txt");
-        QDir::setCurrent(curpath);
-        return 0;
-    }
-   PHGAPI(lab)
-    {
-        system("start C:\\Users\\18858\\Documents\\_LAB");
-        return 0;
-    }
-   PHGAPI(work)
-    {
-        system("start C:\\Users\\18858\\Documents\\Work");
-        return 0;
-    }
-   PHGAPI(excel)
-    {
-        QString curpath = QDir::currentPath();
-        QDir::setCurrent("C:\\Program Files\\Microsoft Office\\root\\Office16");
-        system("EXCEL.EXE");
-        QDir::setCurrent(curpath);
-        return 0;
-    }
-   PHGAPI(qt)
-    {
-        QString curpath = QDir::currentPath();
-        QDir::setCurrent("C:\\Users\\18858\\Documents\\Work\\QT\\Tools\\QtCreator\\bin\\");
-        system("qtcreator.exe");
-        QDir::setCurrent(curpath);
-        return 0;
-    }
-    PHGAPI(qtclass)
-    {
-        std::string content;
-        loadtemp("C:\\Users\\18858\\Desktop\\qediter\\template/qtclass.txt", content);
-        if(PHG_ARGS > 0)
-        {
-            var v1 = PHG_PARAM(1);
-            std::string marker = "#name";
-            int pos = 0;
-            while(pos=content.find(marker), pos != std::string::npos){
-                content.replace(pos, marker.length(), PHG_STABLE(v1));
-            }
-            writecontent("C:\\Users\\18858\\Desktop\\qediter/qtclass.txt", content);
-        }
-        return 0;
-    }
-    PHGAPI(field)
-     {
-        //std::filesystem::copy("C:\\Users\\18858\\Desktop\\qediter\\template\\u3d_field", "C:\\Users\\18858\\Desktop\\u3d_field", std::filesystem::copy_options::recursive);
-        PRINT("copy field finished!")
-        return 0;
-     }
-    PHGAPI(shader2d)
-    {
-        std::string content;
-        loadtemp("C:\\Users\\18858\\Desktop\\qediter\\template/ShaderTemplate2D.shader", content);
-        if(PHG_ARGS == 1)
-        {
-            std::string paramstr = PHG_STABLE(PHG_PARAM(1));
-            PRINT(paramstr.c_str())
-            std::string marker = "ShaderTemplate2D";
-            int pos = 0;
-            while(pos=content.find(marker), pos != std::string::npos){
-                content.replace(pos, marker.length(), paramstr);
-            }
-            writecontent("C:\\Users\\18858\\Desktop\\qediter/shader.shader", content);
-            PRINT("writecontent")
-           // std::filesystem::copy("C:\\Users\\18858\\Desktop\\qediter/shader.shader",
-           //           std::string("C:\\Users\\18858\\Desktop\\u3d_field/Assets/mat/shader/") + paramstr +  std::string(".shader"),
-           //           std::filesystem::copy_options::overwrite_existing);
-            PRINT("copy")
-        }
-        return 0;
-    }
-    PHGAPI(pip)
-     {
-        if(PHG_ARGS == 1)
-        {
-            QString curpath = QDir::currentPath();
-            QDir::setCurrent("C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python37_64\\Scripts");
-            std::string paramstr = PHG_STABLE(PHG_PARAM(1));
-            system((std::string("pip ") + paramstr).c_str());
-            system("pause");
-            QDir::setCurrent(curpath);
-         }
-         return 0;
-     }
+  
     PHGAPI(paint)
      {
          system("mspaint");
@@ -345,15 +247,6 @@ namespace phg
         phg::tree = _tree;
 
         REGAPI(msgbox);
-        REGAPI(vs);
-        REGAPI(password);
-        REGAPI(work);
-        REGAPI(lab);
-        REGAPI(excel);
-        REGAPI(shader2d);
-        REGAPI(qtclass);
-        REGAPI(field);
-        REGAPI(pip);
         REGAPI(paint);
         REGAPI(qt);
         REGAPI(vcpkg);
