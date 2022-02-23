@@ -130,47 +130,95 @@ namespace phg
             }
         };
 
-        static void _tree(code& cd, tree_t* tree, int depth = 0)
+        static inline std::string getstring(code& cd)
         {
-            PRINT("TREE(" << depth << "):");
-            cd.next();
-
-            std::string key, val;
-            std::string* pstr = &key;
-            while (!cd.eoc()) {
-                char c = cd.cur();
-                //PRINT("c=" << c );
-                if (c == '{') {
-                    tree_t* ntree = new tree_t;
-                    tree->children.push_back(ntree);
-                    _tree(cd, ntree, depth + 1);
-                }
-                else if (c == '}') {
-                    PRINT("}")
-                    return;
-                }
-                else if (c == ';') {
-                    tree->kv[key] = val;
-                    PRINT(key << ":" << val);
-                    key = "";
-                    val = "";
-                    pstr = &key;
-
-                    cd.next();
-                }
-                else if (c == '\n') {
-                    cd.next();
-                }
-                else if (c == ':') {
-
-                    pstr = &val;
-                    cd.next();
-                }
-                else {
-                    *pstr += cd.cur();
-                    cd.next();
-                }
+          std::string content;
+          while (!cd.eoc()) {
+            char c = cd.cur();
+            if (c != '\'' && c != '\"')
+            {
+              content += c;
+              cd.next();
+              continue;
             }
+            cd.next();
+            break;
+          }
+          PRINTV(content);
+          return content;
+        }
+        static void _tree(code& cd, tree_t* tree, const string& pre, int depth = 0)
+        {
+          PRINT("TREE(" << depth << ")");
+          cd.next();
+
+          std::string key, val;
+          std::string* pstr = &key;
+          int index = 0;
+          while (!cd.eoc()) {
+            char c = cd.cur();
+          //	PRINT("c=" << c );
+            if (c == '{'|| c == '[') {
+              PRINT("{");
+              index++;
+              if (key.empty())
+              {
+                key = to_string(index);
+              }
+              tree_t* ntree = new tree_t;
+              tree->children.push_back(ntree);
+              _tree(cd, ntree, key, depth + 1);
+              val = "";
+              key = "";
+              pstr = &key;
+            }
+            else if (c == '}' || c == ']') {
+              PRINT("}");
+              cd.next();
+              return;
+            }
+            else if (c == ';' || c == ',') {
+              if (key.empty() && val.empty()) {
+                cd.next();
+                continue;
+              }
+              index ++;
+              if (val.empty())
+              {
+                val = key;
+                key = to_string(index);
+              }
+
+              if(!pre.empty())
+                key = pre + "." + key;
+
+              tree->kv[key] = val;
+              PRINT(key << " : " << val);
+
+              val = "";
+              key = "";
+              pstr = &key;
+
+              cd.next();
+            }
+            else if (c == '\n') {
+              cd.next();
+            }
+            else if (c == ':') {
+
+              pstr = &val;
+              cd.next();
+            }
+            else if (c == '\'' || c == '\"') {
+
+              cd.next();
+              *pstr += getstring(cd);
+            }
+            else {
+              *pstr += cd.cur();
+              cd.next();
+            }
+          }
         }
         static void _tree(code& cd)
         {
